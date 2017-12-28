@@ -2,7 +2,10 @@
     Private psi As ProcessStartInfo
     Private cmd As Process
     Private Delegate Sub InvokeWithString(ByVal text As String)
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRun.Click
+    Private Sub DaLoad() Handles Me.Load
+        txtFolder.Text = "Request"
+    End Sub
+    Private Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnRun.Click
         Dim Command, Folder, URL As String
         Folder = txtFolder.Text
         URL = txtURL.Text
@@ -18,7 +21,7 @@
         Else
             psi = New ProcessStartInfo(Command)
         End If
-        Dim systemencoding As System.Text.Encoding
+        Dim systemencoding As Text.Encoding
         System.Text.Encoding.GetEncoding(Globalization.CultureInfo.CurrentUICulture.TextInfo.OEMCodePage)
         With psi
             .UseShellExecute = False
@@ -35,9 +38,10 @@
         cmd.Start()
         cmd.BeginOutputReadLine()
         cmd.BeginErrorReadLine()
+        txtURL.Text = ""
     End Sub
     Private Sub Async_Data_Received(ByVal sender As Object, ByVal e As DataReceivedEventArgs)
-        Me.Invoke(New InvokeWithString(AddressOf Sync_Output), e.Data)
+        Invoke(New InvokeWithString(AddressOf Sync_Output), e.Data)
     End Sub
     Private Sub Sync_Output(ByVal text As String)
         txtOutput.AppendText(text & Environment.NewLine)
